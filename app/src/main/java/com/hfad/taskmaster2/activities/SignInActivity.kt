@@ -1,16 +1,16 @@
-package com.hfad.taskmaster2
+package com.hfad.taskmaster2.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
-import com.hfad.taskmaster2.databinding.ActivityIntroBinding
-import com.hfad.taskmaster2.databinding.ActivitySignUpBinding
+import com.hfad.taskmaster2.R
+import com.hfad.taskmaster2.databinding.ActivitySignInBinding
 
-class SignUpActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySignUpBinding
+class SignInActivity : BaseActivity() {
+    private lateinit var binding: ActivitySignInBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         setUpActionBar()
@@ -21,13 +21,13 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setUpActionBar(){
-        setSupportActionBar(binding.toolbarSignUpActivity)
+        setSupportActionBar(binding.toolbarSignInActivity)
         val actionBar = supportActionBar
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_black_color_back_24dp)
         }
-        binding.toolbarSignUpActivity.setNavigationOnClickListener{onBackPressed()}
+        binding.toolbarSignInActivity.setNavigationOnClickListener{onBackPressed()}
 
 
     }

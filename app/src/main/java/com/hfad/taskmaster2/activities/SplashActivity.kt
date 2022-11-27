@@ -1,4 +1,4 @@
-package com.hfad.taskmaster2
+package com.hfad.taskmaster2.activities
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -6,11 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager.LayoutParams.*
+import com.hfad.taskmaster2.activities.IntroActivity
 import com.hfad.taskmaster2.databinding.ActivitySplashBinding
 
-private lateinit var binding: ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)

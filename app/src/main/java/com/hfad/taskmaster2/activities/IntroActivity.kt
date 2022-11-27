@@ -1,4 +1,4 @@
-package com.hfad.taskmaster2
+package com.hfad.taskmaster2.activities
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
 import com.hfad.taskmaster2.databinding.ActivityIntroBinding
-import com.hfad.taskmaster2.databinding.ActivitySplashBinding
 
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BaseActivity() {
     private lateinit var binding: ActivityIntroBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

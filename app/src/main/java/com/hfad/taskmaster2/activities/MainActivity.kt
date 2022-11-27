@@ -1,7 +1,8 @@
-package com.hfad.taskmaster2
+package com.hfad.taskmaster2.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.hfad.taskmaster2.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
