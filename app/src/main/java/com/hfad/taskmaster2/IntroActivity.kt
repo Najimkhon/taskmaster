@@ -1,5 +1,6 @@
 package com.hfad.taskmaster2
 
+import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,5 +23,9 @@ class IntroActivity : AppCompatActivity() {
         )
         val typFace: Typeface = Typeface.createFromAsset(assets, "carbon bl.ttf")
         binding.tvAppNameIntro.typeface = typFace
+
+        binding.btnSignUpIntro.setOnClickListener{
+            startActivity(Intent(this, SignUpActivity::class.java))
+        }
     }
 }
