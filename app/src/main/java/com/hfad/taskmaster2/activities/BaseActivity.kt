@@ -12,26 +12,29 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivityMainBinding
+import com.hfad.taskmaster2.databinding.ActivitySignInBinding
+import com.hfad.taskmaster2.databinding.DialogProgressBinding
 
 open class BaseActivity : AppCompatActivity() {
-
+    private lateinit var binding: DialogProgressBinding
     private var doubleBackPressedOnce = false
     private lateinit var mProgressDialog:Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
+        binding = DialogProgressBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
     }
 
     fun showProgressDialog(text:String){
         mProgressDialog = Dialog(this)
         mProgressDialog.setContentView(R.layout.dialog_progress)
-        val tvProgress = findViewById<TextView>(R.id.tv_progress_text)
-        tvProgress.text = text
+        binding.tvProgressText.text = text
         mProgressDialog.show()
     }
 
-    fun dismissProgressDialog(){
+    fun hideProgressDialog(){
         mProgressDialog.dismiss()
     }
 
