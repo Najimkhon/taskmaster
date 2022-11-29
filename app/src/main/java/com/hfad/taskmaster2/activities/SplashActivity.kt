@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager.LayoutParams.*
+import com.google.firebase.ktx.Firebase
 import com.hfad.taskmaster2.activities.IntroActivity
 import com.hfad.taskmaster2.databinding.ActivitySplashBinding
+import com.hfad.taskmaster2.firebase.FirestoreClass
 
 
 class SplashActivity : AppCompatActivity() {
@@ -26,7 +28,12 @@ class SplashActivity : AppCompatActivity() {
         binding.tvAppName.typeface = typFace
 
         Handler().postDelayed({
-            startActivity(Intent(this, IntroActivity::class.java))
+            var currentUserId = FirestoreClass().getCurrentUserId()
+            if(currentUserId.isNotEmpty()){
+                startActivity(Intent(this, MainActivity::class.java))
+            }else{
+            startActivity(Intent(this, IntroActivity::class.java))}
+
             finish()
         }, 2500)
 

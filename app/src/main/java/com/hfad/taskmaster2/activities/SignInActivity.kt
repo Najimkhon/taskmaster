@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivitySignInBinding
+import com.hfad.taskmaster2.models.User
 
 class SignInActivity : BaseActivity() {
     private lateinit var binding: ActivitySignInBinding
@@ -29,6 +30,13 @@ class SignInActivity : BaseActivity() {
         binding.btnSignIn.setOnClickListener{
             signInRegisteredUser()
         }
+    }
+
+    fun signInSuccess(user: User){
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+
     }
 
     private fun signInRegisteredUser(){
