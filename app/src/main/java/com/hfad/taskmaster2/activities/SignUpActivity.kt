@@ -11,6 +11,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivitySignUpBinding
+import com.hfad.taskmaster2.firebase.FirestoreClass
+import com.hfad.taskmaster2.models.User
 
 class SignUpActivity : BaseActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -24,6 +26,14 @@ class SignUpActivity : BaseActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+    }
+
+    fun userRegisteredSuccess(){
+        Toast.makeText(this, "You have successfully registered", Toast.LENGTH_LONG).show()
+        hideProgressDialog()
+        FirebaseAuth.getInstance().signOut()
+        finish()
+
     }
 
     private fun setUpActionBar(){
@@ -45,13 +55,11 @@ class SignUpActivity : BaseActivity() {
            showProgressDialog(resources.getString(R.string.please_wait))
             FirebaseAuth.getInstance()
                 .createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-                    hideProgressDialog()
                     if(it.isSuccessful){
                         val firebaseUser: FirebaseUser = it.result!!.user!!
                         val registeredEmail = firebaseUser.email!!
-                        Toast.makeText(this, "$name you have successfully registered with the email adress $registeredEmail", Toast.LENGTH_LONG).show()
-                        FirebaseAuth.getInstance().signOut()
-                        finish()
+                        val user = User(firebaseUser.uid, name, registeredEmail)
+                        FirestoreClass().registerUser(this,user)
                     }else{
                         Toast.makeText(this, it.exception!!.message, Toast.LENGTH_SHORT).show()
                     }
