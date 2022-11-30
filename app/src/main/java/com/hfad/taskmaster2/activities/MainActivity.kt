@@ -5,15 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivityMainBinding
 import com.hfad.taskmaster2.databinding.ActivitySignInBinding
 import com.hfad.taskmaster2.databinding.AppBarMainBinding
+import com.hfad.taskmaster2.databinding.NavHeaderMainBinding
+import com.hfad.taskmaster2.firebase.FirestoreClass
+import com.hfad.taskmaster2.models.User
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -25,6 +32,23 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setContentView(view)
         setUpActionBar()
         binding.navView.setNavigationItemSelectedListener(this)
+        FirestoreClass().signInUser(this)
+    }
+
+    fun updateNavigationUserDetails(user: User){
+
+        val headerView = binding.navView.getHeaderView(0)
+        val headerBinding = NavHeaderMainBinding.bind(headerView)
+
+
+        Glide
+            .with(this)
+            .load(user.image)
+            .centerCrop()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(headerBinding.ivUserImage)
+        headerBinding.tvUsername.text = user.name
+
     }
 
     private fun setUpActionBar(){

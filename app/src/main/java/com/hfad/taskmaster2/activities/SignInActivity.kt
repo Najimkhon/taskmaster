@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivitySignInBinding
+import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.User
 
 class SignInActivity : BaseActivity() {
@@ -49,7 +50,7 @@ class SignInActivity : BaseActivity() {
                 .addOnCompleteListener(this) { task ->
                     hideProgressDialog()
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
+                        FirestoreClass().signInUser(this)
                         Log.d(TAG, "signInWithEmail:success")
                         val user = auth.currentUser
                         startActivity(Intent(this, MainActivity::class.java))
@@ -77,7 +78,6 @@ class SignInActivity : BaseActivity() {
 
     }
     private fun validateForm(email:String, password:String):Boolean{
-        var result:Boolean
         return when {
             TextUtils.isEmpty(email)->{
                 showSnackBar("Please enter a email")
