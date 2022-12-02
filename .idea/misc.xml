@@ -3,10 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/drawable/ic_action_navigation_menu.xml" value="0.123" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/drawable/ic_black_color_back_24dp.xml" value="0.123" />
+        <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/drawable/ic_vector_add_24dp.xml" value="0.123" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/drawable/nav_header_main_background.xml" value="0.123" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/drawable/shape_button_rounded.xml" value="0.124" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/layout/activity_base.xml" value="0.14583333333333334" />
+        <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/layout/activity_create_board.xml" value="0.25416666666666665" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/layout/activity_intro.xml" value="0.11302083333333333" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
         <entry key="..\:/Kotlin/TaskMaster2/app/src/main/res/layout/activity_my_profile.xml" value="0.25416666666666665" />

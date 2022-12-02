@@ -1,29 +1,25 @@
 package com.hfad.taskmaster2.activities
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.GravityCompat
-import androidx.core.view.get
-import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivityMainBinding
-import com.hfad.taskmaster2.databinding.ActivitySignInBinding
-import com.hfad.taskmaster2.databinding.AppBarMainBinding
 import com.hfad.taskmaster2.databinding.NavHeaderMainBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.User
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    companion object{
+        const val MY_PROFILE_REQUEST_CODE:Int = 11
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +28,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setContentView(view)
         setUpActionBar()
         binding.navView.setNavigationItemSelectedListener(this)
-        FirestoreClass().signInUser(this)
+        FirestoreClass().loadUserData(this)
+        binding.mainAppBarLayout.fabCreateBoard.setOnClickListener{
+            startActivity(Intent(this, CreateBoardActivity::class.java))
+        }
     }
 
     fun updateNavigationUserDetails(user: User){
@@ -81,7 +80,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.nav_my_profile ->{
-                startActivity(Intent(this, MyProfileActivity::class.java))
+                startActivityForResult(Intent(this, MyProfileActivity::class.java),
+                    MY_PROFILE_REQUEST_CODE)
             }
             R.id.nav_sign_out->{
                 FirebaseAuth.getInstance().signOut()
@@ -93,5 +93,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
+            FirestoreClass().loadUserData(this)
+        }else{
+            Log.e("Cancelled", "Requestcode: $requestCode" +
+                    "resultCode: $resultCode" +
+                    "activity code: ${Activity.RESULT_OK}")
+        }
     }
 }
