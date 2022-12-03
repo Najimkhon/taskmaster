@@ -14,9 +14,11 @@ import com.hfad.taskmaster2.databinding.ActivityMainBinding
 import com.hfad.taskmaster2.databinding.NavHeaderMainBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.User
+import com.hfad.taskmaster2.utils.Constants
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mUserName: String
     companion object{
         const val MY_PROFILE_REQUEST_CODE:Int = 11
     }
@@ -30,12 +32,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.navView.setNavigationItemSelectedListener(this)
         FirestoreClass().loadUserData(this)
         binding.mainAppBarLayout.fabCreateBoard.setOnClickListener{
-            startActivity(Intent(this, CreateBoardActivity::class.java))
+            val intent = Intent(this, CreateBoardActivity::class.java)
+            intent.putExtra(Constants.NAME, mUserName)
+            startActivity(intent)
         }
     }
 
     fun updateNavigationUserDetails(user: User){
-
+        mUserName = user.name
         val headerView = binding.navView.getHeaderView(0)
         val headerBinding = NavHeaderMainBinding.bind(headerView)
 

@@ -17,9 +17,10 @@ import com.hfad.taskmaster2.databinding.ActivityMyProfileBinding
 import com.hfad.taskmaster2.utils.Constants
 import java.io.IOException
 
-class CreateBoardActivity : AppCompatActivity() {
+class CreateBoardActivity : BaseActivity() {
     private lateinit var binding: ActivityCreateBoardBinding
     private var mSelectedImageUri: Uri? = null
+    private lateinit var mUserName: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateBoardBinding.inflate(layoutInflater)
@@ -32,6 +33,9 @@ class CreateBoardActivity : AppCompatActivity() {
             }else{
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), Constants.READ_STORAGE_PERMISSION_CODE)
             }
+        }
+        if (intent.hasExtra(Constants.NAME)){
+            mUserName = intent.getStringExtra(Constants.NAME)!!
         }
     }
 
@@ -63,6 +67,12 @@ class CreateBoardActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun boardCreatedSuccessfully(){
+        hideProgressDialog()
+        finish()
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

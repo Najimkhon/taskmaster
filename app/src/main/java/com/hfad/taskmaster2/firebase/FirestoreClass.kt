@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
 import com.hfad.taskmaster2.activities.*
+import com.hfad.taskmaster2.models.Board
 import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
 
@@ -21,9 +22,23 @@ class FirestoreClass {
                 activity.userRegisteredSuccess()
             }.addOnFailureListener{
                 e->
-                Log.e(activity.javaClass.simpleName, "error")
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "error", e)
             }
 
+    }
+
+    fun createBoard(activity: CreateBoardActivity, board: Board){
+        mFireStore.collection(Constants.BOARDS)
+            .document(getCurrentUserId()).set(board, SetOptions.merge()).addOnSuccessListener {
+                Log.i(activity.javaClass.simpleName, "Board created successfully")
+                Toast.makeText(activity, "Board created successfully", Toast.LENGTH_SHORT).show()
+                activity.boardCreatedSuccessfully()
+            }.addOnFailureListener{
+                    e->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "error", e)
+            }
     }
 
     fun updateUserProfileData(activity: MyProfileActivity, userHashMap:HashMap<String, Any>){
