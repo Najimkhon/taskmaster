@@ -5,14 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.hfad.taskmaster2.R
+import com.hfad.taskmaster2.adapters.BoardItemsAdapter
 import com.hfad.taskmaster2.databinding.ActivityMainBinding
 import com.hfad.taskmaster2.databinding.NavHeaderMainBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
+import com.hfad.taskmaster2.models.Board
 import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
 
@@ -30,7 +34,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setContentView(view)
         setUpActionBar()
         binding.navView.setNavigationItemSelectedListener(this)
-        FirestoreClass().loadUserData(this)
+        FirestoreClass().loadUserData(this, true)
         binding.mainAppBarLayout.fabCreateBoard.setOnClickListener{
             val intent = Intent(this, CreateBoardActivity::class.java)
             intent.putExtra(Constants.NAME, mUserName)
@@ -38,7 +42,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    fun updateNavigationUserDetails(user: User){
+    fun updateNavigationUserDetails(user: User, readBoardList: Boolean){
         mUserName = user.name
         val headerView = binding.navView.getHeaderView(0)
         val headerBinding = NavHeaderMainBinding.bind(headerView)
@@ -52,6 +56,27 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(headerBinding.ivUserImage)
         headerBinding.tvUsername.text = user.name
 
+        if (readBoardList){
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirestoreClass().getBoardsList(this)
+        }
+
+    }
+
+    fun populateBoardsListUI(boardsList: ArrayList<Board>){
+        hideProgressDialog()
+        if (boardsList.size>0){
+            binding.mainAppBarLayout.mainContentLayout.rvBoardsList.visibility = View.VISIBLE
+            binding.mainAppBarLayout.mainContentLayout.tvNoBoardsAvailable.visibility = View.GONE
+
+            binding.mainAppBarLayout.mainContentLayout.rvBoardsList.layoutManager = LinearLayoutManager(this)
+            binding.mainAppBarLayout.mainContentLayout.rvBoardsList.setHasFixedSize(true)
+            val adapter = BoardItemsAdapter(this, boardsList)
+            binding.mainAppBarLayout.mainContentLayout.rvBoardsList.adapter = adapter
+        }else{
+            binding.mainAppBarLayout.mainContentLayout.rvBoardsList.visibility = View.GONE
+            binding.mainAppBarLayout.mainContentLayout.tvNoBoardsAvailable.visibility = View.VISIBLE
+        }
     }
 
     private fun setUpActionBar(){
