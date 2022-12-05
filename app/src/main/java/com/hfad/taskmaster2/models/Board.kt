@@ -8,7 +8,8 @@ data class Board (
     var image: String = "",
     var createdBy: String = "",
     var assignedTo: ArrayList<String> = ArrayList(),
-    var documentId: String = ""
+    var documentId: String = "",
+    var taskList: ArrayList<Task> = ArrayList()
         ):Parcelable{
 
     constructor(source: Parcel) : this(
@@ -16,7 +17,8 @@ data class Board (
         source.readString()!!,
         source.readString()!!,
         source.createStringArrayList()!!,
-        source.readString()!!
+        source.readString()!!,
+        source.createTypedArrayList(Task.CREATOR)!!
     )
 
     override fun describeContents() = 0
@@ -27,6 +29,7 @@ data class Board (
         writeString(createdBy)
         writeStringList(assignedTo)
         writeString(documentId)
+        writeTypedList(taskList)
     }
 
 

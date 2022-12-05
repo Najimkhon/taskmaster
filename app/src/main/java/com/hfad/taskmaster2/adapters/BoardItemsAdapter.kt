@@ -10,7 +10,7 @@ import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ItemBoardBinding
 import com.hfad.taskmaster2.models.Board
 
-open class BoardItemsAdapter(private val context: Context,
+open class BoardItemsAdapter    (private val context: Context,
                             private var list:ArrayList<Board>):
         RecyclerView.Adapter<BoardItemsAdapter.MyViewHolder>(){
 
@@ -44,6 +44,10 @@ open class BoardItemsAdapter(private val context: Context,
     }
     interface OnClickListener{
         fun onClick(position: Int, model: Board)
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener){
+        this.onClickListener = onClickListener
     }
 
     inner class MyViewHolder(val itemBoardBinding: ItemBoardBinding):RecyclerView.ViewHolder(itemBoardBinding.root){

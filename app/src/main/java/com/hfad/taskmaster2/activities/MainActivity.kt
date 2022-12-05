@@ -17,6 +17,7 @@ import com.hfad.taskmaster2.databinding.ActivityMainBinding
 import com.hfad.taskmaster2.databinding.NavHeaderMainBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.Board
+import com.hfad.taskmaster2.models.Task
 import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
 
@@ -25,6 +26,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var mUserName: String
     companion object{
         const val MY_PROFILE_REQUEST_CODE:Int = 11
+        const val CREATE_BOARD_REQUEST_CODE:Int = 12
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +40,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.mainAppBarLayout.fabCreateBoard.setOnClickListener{
             val intent = Intent(this, CreateBoardActivity::class.java)
             intent.putExtra(Constants.NAME, mUserName)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
         }
+
+
     }
 
     fun updateNavigationUserDetails(user: User, readBoardList: Boolean){
@@ -73,6 +77,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             binding.mainAppBarLayout.mainContentLayout.rvBoardsList.setHasFixedSize(true)
             val adapter = BoardItemsAdapter(this, boardsList)
             binding.mainAppBarLayout.mainContentLayout.rvBoardsList.adapter = adapter
+
+            adapter.setOnClickListener(object : BoardItemsAdapter.OnClickListener{
+                override fun onClick(position: Int, model: Board) {
+                    val intent = Intent(this@MainActivity, TaskListActivity::class.java)
+                    intent.putExtra(Constants.DOCUMENT_ID, model.documentId)
+                    startActivity(intent)
+                }
+            })
         }else{
             binding.mainAppBarLayout.mainContentLayout.rvBoardsList.visibility = View.GONE
             binding.mainAppBarLayout.mainContentLayout.tvNoBoardsAvailable.visibility = View.VISIBLE
@@ -128,7 +140,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
             FirestoreClass().loadUserData(this)
-        }else{
+        }else if (resultCode==Activity.RESULT_OK && requestCode == CREATE_BOARD_REQUEST_CODE){
+            FirestoreClass().getBoardsList(this)
+        }else
+        {
             Log.e("Cancelled", "Requestcode: $requestCode" +
                     "resultCode: $resultCode" +
                     "activity code: ${Activity.RESULT_OK}")
