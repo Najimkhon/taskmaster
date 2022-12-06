@@ -4,10 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ItemBoardBinding
+import com.hfad.taskmaster2.databinding.ItemTaskBinding
 import com.hfad.taskmaster2.models.Board
 
 open class BoardItemsAdapter    (private val context: Context,
@@ -17,6 +19,7 @@ open class BoardItemsAdapter    (private val context: Context,
     private var onClickListener: OnClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+
         return MyViewHolder(ItemBoardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
