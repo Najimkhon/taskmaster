@@ -1,7 +1,10 @@
 package com.hfad.taskmaster2.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.adapters.TaskListItemsAdapter
@@ -30,6 +33,20 @@ class TaskListActivity : BaseActivity() {
 
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().getBoardsDetails(this, boardDocumentId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_members, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_members -> {
+                startActivity(Intent(this, MembersActivity::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun boardDetails(board: Board){
