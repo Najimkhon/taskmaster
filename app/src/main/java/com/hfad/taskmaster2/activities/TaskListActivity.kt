@@ -9,6 +9,7 @@ import com.hfad.taskmaster2.databinding.ActivityMyProfileBinding
 import com.hfad.taskmaster2.databinding.ActivityTaskListBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.Board
+import com.hfad.taskmaster2.models.Card
 import com.hfad.taskmaster2.models.Task
 import com.hfad.taskmaster2.utils.Constants
 
@@ -86,6 +87,25 @@ class TaskListActivity : BaseActivity() {
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().addUpdateTaskList(this,mBoardDetails)
+    }
+
+    fun createCard(position: Int, cardName: String){
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size -1)
+        val cardAssignedUsersList: ArrayList<String> = ArrayList()
+        cardAssignedUsersList.add(FirestoreClass().getCurrentUserId())
+        val card = Card(cardName, FirestoreClass().getCurrentUserId(), cardAssignedUsersList)
+
+        val cardList = mBoardDetails.taskList[position].cardList
+        cardList.add(card)
+
+        val task = Task(
+            mBoardDetails.taskList[position].title,
+            mBoardDetails.taskList[position].createdBy,
+            cardList
+        )
+        mBoardDetails.taskList[position] = task
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().addUpdateTaskList(this, mBoardDetails)
     }
 
 

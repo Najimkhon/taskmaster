@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hfad.taskmaster2.activities.TaskListActivity
 import com.hfad.taskmaster2.databinding.ItemTaskBinding
@@ -78,6 +79,31 @@ open class TaskListItemsAdapter(private val context: Context, private var list: 
             holder.itemTaskBinding.ibDeleteList.setOnClickListener{
                 alertDialogForDeleteList(position, model.title)
             }
+
+            holder.itemTaskBinding.tvAddCard.setOnClickListener{
+                holder.itemTaskBinding.cvAddCard.visibility = View.VISIBLE
+                holder.itemTaskBinding.tvAddCard.visibility = View.GONE
+            }
+
+            holder.itemTaskBinding.ibCloseCardName.setOnClickListener{
+                holder.itemTaskBinding.cvAddCard.visibility = View.GONE
+                holder.itemTaskBinding.tvAddCard.visibility = View.VISIBLE
+            }
+            holder.itemTaskBinding.ibDoneCardName.setOnClickListener{
+                val cardName = holder.itemTaskBinding.etCardName.text.toString()
+                if (cardName.isNotEmpty()){
+                    if (context is TaskListActivity){
+                        context.createCard(position, cardName)
+                    }else{
+                        Toast.makeText(context, "Please, enter a card name!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            holder.itemTaskBinding.rvCardList.layoutManager = LinearLayoutManager(context)
+            holder.itemTaskBinding.rvCardList.setHasFixedSize(true)
+            val adapter = CardListItemsAdapter(context, model.cardList)
+            holder.itemTaskBinding.rvCardList.adapter = adapter
         }
     }
 
