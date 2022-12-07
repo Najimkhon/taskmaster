@@ -131,6 +131,24 @@ class FirestoreClass {
 
     }
 
+    fun getAssignedMembersList(assignedTo: ArrayList<String>, activity: MembersActivity){
+        mFireStore.collection(Constants.USERS)
+            .whereIn(Constants.ID, assignedTo)
+            .get()
+            .addOnSuccessListener {
+                activity.hideProgressDialog()
+                Log.i(activity.javaClass.simpleName, it.documents.toString())
+                val usersList = ArrayList<User>()
+                it.forEach{
+                    usersList.add(it.toObject(User::class.java))
+                }
+                activity.setUpUsersList(usersList)
+            }.addOnFailureListener {
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while getting users list", it)
+            }
+    }
+
     fun getBoardsDetails(activity: TaskListActivity, boardDocumentId: String) {
         mFireStore.collection(Constants.BOARDS)
             // A where array query as we want the list of the board in which the user is assigned. So here you can pass the current user id.
