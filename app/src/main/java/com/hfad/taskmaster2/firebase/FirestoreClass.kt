@@ -11,6 +11,7 @@ import com.hfad.taskmaster2.activities.*
 import com.hfad.taskmaster2.models.Board
 import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
+import kotlinx.coroutines.CoroutineScope
 
 
 class FirestoreClass {
@@ -182,6 +183,41 @@ class FirestoreClass {
                 activity.hideProgressDialog()
                 Log.e(activity.javaClass.simpleName, "Error while updating a board.", e)
             }
+    }
+
+    fun getMemberDetails(activity: MembersActivity, email:String){
+        mFireStore.collection(Constants.USERS)
+            .whereEqualTo(Constants.EMAIL, email)
+            .get()
+            .addOnSuccessListener{
+                if (it.documents.size>0){
+                    val user = it.documents[0].toObject(User::class.java)!!
+                    activity.memberDetails(user)
+                }else{
+                    activity.hideProgressDialog()
+                    activity.showSnackBar("No such member found!")
+                }
+            }.addOnFailureListener {
+                Log.e(activity.javaClass.simpleName,
+                    "Error while getting user details!", it)
+
+
+            }
+    }
+
+    fun assignMemberToBoard(activity: MembersActivity, board: Board, user: User){
+        val assignedToHashMap = HashMap<String, Any>()
+        assignedToHashMap[Constants.ASSIGNED_TO] = board.assignedTo
+        mFireStore.collection(Constants.BOARDS)
+            .document(board.documentId)
+            .update(assignedToHashMap)
+            .addOnSuccessListener {
+                activity.memberAssignSuccess(user)
+            }.addOnFailureListener{
+                Log.e(activity.javaClass.simpleName,
+                    "Error while assigning user to the board!", it)
+            }
+
     }
 
 }
