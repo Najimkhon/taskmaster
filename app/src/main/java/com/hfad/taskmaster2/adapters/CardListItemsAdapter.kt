@@ -2,7 +2,9 @@ package com.hfad.taskmaster2.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hfad.taskmaster2.activities.CardDetailsActivity
@@ -23,6 +25,12 @@ open class CardListItemsAdapter(private val context: Context, private var list: 
     override fun onBindViewHolder(holder: CardListItemsAdapter.MyViewHolder, position: Int) {
         val model = list[position]
         if(holder is MyViewHolder) {
+            if (model.labelColor.isNotEmpty()){
+                holder.itemCardBinding.viewLabelColor.visibility = View.VISIBLE
+                holder.itemCardBinding.viewLabelColor.setBackgroundColor(Color.parseColor(model.labelColor))
+            }else{
+                holder.itemCardBinding.viewLabelColor.visibility = View.GONE
+            }
             holder.itemCardBinding.tvCardName.text = model.name
             holder.itemCardBinding.card.setOnClickListener{
                 if (onClickListener!=null){
