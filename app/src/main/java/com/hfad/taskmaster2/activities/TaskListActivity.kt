@@ -16,6 +16,7 @@ import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.Board
 import com.hfad.taskmaster2.models.Card
 import com.hfad.taskmaster2.models.Task
+import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
 import java.text.FieldPosition
 
@@ -23,6 +24,7 @@ class TaskListActivity : BaseActivity() {
     private lateinit var binding: ActivityTaskListBinding
     private lateinit var mBoardDetails: Board
     private lateinit var mBoardDocumentId: String
+    private lateinit var mAssignedUsersList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,7 @@ class TaskListActivity : BaseActivity() {
         intent.putExtra(Constants.CARD_LIST_ITEM_POSITION,cardPosition )
         intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
         intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
+        intent.putExtra(Constants.BOARD_MEMBERS_LIST, mAssignedUsersList)
         startActivityForResult(intent, CARD_DETAILS_REQUEST_CODE)
     }
 
@@ -86,6 +89,9 @@ class TaskListActivity : BaseActivity() {
         binding.rvTaskList.setHasFixedSize(true)
         val adapter = TaskListItemsAdapter(this, board.taskList)
         binding.rvTaskList.adapter = adapter
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().getAssignedMembersList(board.assignedTo, this)
 
     }
 
@@ -149,6 +155,11 @@ class TaskListActivity : BaseActivity() {
         mBoardDetails.taskList[position] = task
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().addUpdateTaskList(this, mBoardDetails)
+    }
+
+    fun boardUsersList(list: ArrayList<User>){
+        hideProgressDialog()
+        mAssignedUsersList = list
     }
 
     companion object{

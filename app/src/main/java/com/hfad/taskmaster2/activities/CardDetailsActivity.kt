@@ -16,14 +16,19 @@ import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.Board
 import com.hfad.taskmaster2.models.Card
 import com.hfad.taskmaster2.models.Task
+import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
+import com.projemanag.dialogs.MembersListDialog
 
 class CardDetailsActivity : BaseActivity() {
     private lateinit var binding: ActivityCardDetailsBinding
     private lateinit var mBoardDetails: Board
+    private lateinit var mMembersDetailList: ArrayList<User>
     private var cardListPosition: Int = -1
     private var taskListPosition: Int = -1
     private var mSelectedColor: String = ""
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCardDetailsBinding.inflate(layoutInflater)
@@ -46,6 +51,10 @@ class CardDetailsActivity : BaseActivity() {
 
         binding.tvSelectLabelColor.setOnClickListener{
             labelColorsListDialog()
+        }
+
+        binding.tvSelectMembers.setOnClickListener{
+            membersListDialog()
         }
 
 
@@ -100,6 +109,34 @@ class CardDetailsActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun membersListDialog(){
+        var cardAssignedMembersList = mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].assignedTo
+        if (cardAssignedMembersList.size > 0){
+            for (i in mMembersDetailList.indices){
+                for (j in cardAssignedMembersList){
+                    if (mMembersDetailList[i].id == j){
+                        mMembersDetailList[i].selected = true
+                    }
+                }
+            }
+        }else{
+            for (i in mMembersDetailList.indices){
+                        mMembersDetailList[i].selected = false
+            }
+        }
+
+        val listDialog = object: MembersListDialog(
+            this,
+            mMembersDetailList,
+            resources.getString(R.string.str_select_member)
+        ){
+            override fun onItemSelected(user: User, action: String) {
+                TODO("Not yet implemented")
+            }
+        }
+        listDialog.show()
+    }
+
 
 
     private fun getIntentData(){
@@ -112,6 +149,9 @@ class CardDetailsActivity : BaseActivity() {
         }
         if (intent.hasExtra(Constants.CARD_LIST_ITEM_POSITION)){
             cardListPosition = intent.getIntExtra(Constants.CARD_LIST_ITEM_POSITION, -1)
+        }
+        if (intent.hasExtra(Constants.BOARD_MEMBERS_LIST)){
+            mMembersDetailList = intent.getParcelableArrayListExtra(Constants.BOARD_MEMBERS_LIST)!!
         }
     }
 

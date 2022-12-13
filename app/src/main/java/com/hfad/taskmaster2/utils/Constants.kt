@@ -8,6 +8,7 @@ import android.webkit.MimeTypeMap
 import com.hfad.taskmaster2.activities.MyProfileActivity
 
 object Constants {
+    const val BOARD_MEMBERS_LIST = "boardMembersList"
     const val USERS:String = "users"
     const val BOARDS:String = "boards"
     const val IMAGE:String = "image"
@@ -23,6 +24,8 @@ object Constants {
     const val EMAIL:String = "email"
     const val TASK_LIST_ITEM_POSITION: String = "taskListPosition"
     const val CARD_LIST_ITEM_POSITION: String = "cardListPosition"
+    const val SELECT: String = "Select"
+    const val UN_SELECT: String = "UnSelect"
 
     fun showImageChooser(activity: Activity){
         var galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)

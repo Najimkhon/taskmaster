@@ -61,6 +61,7 @@ class MembersActivity : BaseActivity() {
     }
 
     fun setUpUsersList(users: ArrayList<User>){
+        hideProgressDialog()
         mAssignedMembersList = users
         binding.rvMembersList.layoutManager = LinearLayoutManager(this)
         binding.rvMembersList.setHasFixedSize(true)

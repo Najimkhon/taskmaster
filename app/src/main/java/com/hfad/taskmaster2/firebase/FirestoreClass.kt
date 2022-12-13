@@ -129,21 +129,29 @@ class FirestoreClass {
 
     }
 
-    fun getAssignedMembersList(assignedTo: ArrayList<String>, activity: MembersActivity) {
+    fun getAssignedMembersList(assignedTo: ArrayList<String>, activity: Activity) {
         mFireStore.collection(Constants.USERS)
             .whereIn(Constants.ID, assignedTo)
             .get()
             .addOnSuccessListener {
-                activity.hideProgressDialog()
                 Log.i(activity.javaClass.simpleName, it.documents.toString())
                 val usersList = ArrayList<User>()
                 it.forEach {
                     usersList.add(it.toObject(User::class.java))
                 }
-                activity.setUpUsersList(usersList)
+
+                if (activity is MembersActivity)
+                    activity.setUpUsersList(usersList)
+                else if (activity is TaskListActivity)
+                    activity.boardUsersList(usersList)
             }.addOnFailureListener {
+                if (activity is MembersActivity){
                 activity.hideProgressDialog()
-                Log.e(activity.javaClass.simpleName, "Error while getting users list", it)
+                Log.e(activity.javaClass.simpleName, "Error while getting users list", it)}
+                else if(activity is TaskListActivity){
+                    activity.hideProgressDialog()
+                    Log.e(activity.javaClass.simpleName, "Error while getting users list", it)
+                }
             }
     }
 
