@@ -57,6 +57,8 @@ class CardDetailsActivity : BaseActivity() {
             membersListDialog()
         }
 
+        setupSelectedMembersList()
+
 
 
     }
@@ -131,7 +133,20 @@ class CardDetailsActivity : BaseActivity() {
             resources.getString(R.string.str_select_member)
         ){
             override fun onItemSelected(user: User, action: String) {
-                TODO("Not yet implemented")
+                if (action == Constants.SELECT){
+                    if (!mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].assignedTo.contains(user.id)){
+                        mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].assignedTo.add(user.id)
+                    }
+                }else{
+                    mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].assignedTo.remove(user.id)
+                    for (i in mMembersDetailList.indices){
+                        if(mMembersDetailList[i].id == user.id){
+                            mMembersDetailList[i].selected = false
+                        }
+                    }
+                }
+
+                setupSelectedMembersList()
             }
         }
         listDialog.show()
@@ -206,6 +221,9 @@ class CardDetailsActivity : BaseActivity() {
             mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].assignedTo,
             mSelectedColor
         )
+
+        val taskList: ArrayList<Task> = mBoardDetails.taskList
+        taskList.removeAt(taskList.size-1)
         mBoardDetails.taskList[taskListPosition].cardList[cardListPosition] = card
 
         showProgressDialog(resources.getString(R.string.please_wait))

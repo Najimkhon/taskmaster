@@ -27,28 +27,31 @@ class CardMemberListItemsAdapter(
     override fun onBindViewHolder(holder: CardMemberListItemsAdapter.MyViewHolder, position: Int) {
         val model = list[position]
 
-        if (holder is MyViewHolder){
-            holder.itemCardSelectedMemberBinding.ivAddMember.visibility = View.VISIBLE
-            holder.itemCardSelectedMemberBinding.ivSelectedMemberImage.visibility = View.GONE
-        }else{
-            holder.itemCardSelectedMemberBinding.ivAddMember.visibility = View.GONE
-            holder.itemCardSelectedMemberBinding.ivSelectedMemberImage.visibility = View.VISIBLE
+        if (holder is MyViewHolder) {
 
-            try {
-                Glide
-                    .with(context)
-                    .load(model.image)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_user_place_holder)
-                    .into(holder.itemCardSelectedMemberBinding.ivSelectedMemberImage)
-            }catch (e: IOException){
-                e.printStackTrace()
+            if (position == list.size - 1) {
+                holder.itemCardSelectedMemberBinding.ivAddMember.visibility = View.VISIBLE
+                holder.itemCardSelectedMemberBinding.ivSelectedMemberImage.visibility = View.GONE
+            } else {
+                holder.itemCardSelectedMemberBinding.ivAddMember.visibility = View.GONE
+                holder.itemCardSelectedMemberBinding.ivSelectedMemberImage.visibility = View.VISIBLE
+
+                try {
+                    Glide
+                        .with(context)
+                        .load(model.image)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_user_place_holder)
+                        .into(holder.itemCardSelectedMemberBinding.ivSelectedMemberImage)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
-        }
 
-        holder.itemCardSelectedMemberBinding.itemView.setOnClickListener{
-            if (onClickListener != null){
-                onClickListener!!.onClick()
+            holder.itemCardSelectedMemberBinding.itemView.setOnClickListener {
+                if (onClickListener != null) {
+                    onClickListener!!.onClick()
+                }
             }
         }
 

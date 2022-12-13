@@ -27,32 +27,34 @@ open class MemberListItemsAdapter(private val context: Context, private val list
 
     override fun onBindViewHolder(holder: MemberListItemsAdapter.MyViewHolder, position: Int) {
         val model = list[position]
+
         if (holder is MyViewHolder){
-            holder.itemMember.tvMemberName.text = model.name
-            holder.itemMember.tvMemberEmail.text = model.email
             try {
                 Glide
                     .with(context)
                     .load(model.image)
                     .centerCrop()
                     .placeholder(R.drawable.ic_user_place_holder)
-                    .into(holder.itemMember.ivMemberImage)
+                    .into(holder.itemMemberBinding.ivMemberImage)
             }catch (e: IOException){
                 e.printStackTrace()
             }
+            holder.itemMemberBinding.tvMemberName.text = model.name
+            holder.itemMemberBinding.tvMemberEmail.text = model.email
+
 
             if(model.selected){
-                holder.itemMember.ivSelectedMember.visibility = View.VISIBLE
+                holder.itemMemberBinding.ivSelectedMember.visibility = View.VISIBLE
             }else{
-                holder.itemMember.ivSelectedMember.visibility = View.GONE
+                holder.itemMemberBinding.ivSelectedMember.visibility = View.GONE
             }
 
-            holder.itemMember.itemView.setOnClickListener{
+            holder.itemMemberBinding.itemView.setOnClickListener{
                 if (onClickListener != null){
                     if (model.selected){
                         onClickListener!!.onClick(position, model, Constants.UN_SELECT)
                     }else{
-                        onClickListener!!.onClick(position, model, Constants.UN_SELECT)
+                        onClickListener!!.onClick(position, model, Constants.SELECT)
                     }
                 }
             }
@@ -64,7 +66,7 @@ open class MemberListItemsAdapter(private val context: Context, private val list
         return list.size
     }
 
-    inner class MyViewHolder(val itemMember: ItemMemberBinding ): RecyclerView.ViewHolder(itemMember.root)
+    inner class MyViewHolder(val itemMemberBinding: ItemMemberBinding ): RecyclerView.ViewHolder(itemMemberBinding.root)
 
     fun setOnClickListener(onClickListener: OnClickListener){
         this.onClickListener = onClickListener
