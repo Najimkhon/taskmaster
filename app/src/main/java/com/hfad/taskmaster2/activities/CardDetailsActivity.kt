@@ -228,7 +228,8 @@ class CardDetailsActivity : BaseActivity() {
             binding.etNameCardDetails.text.toString(),
             mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].createdBy,
             mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].assignedTo,
-            mSelectedColor
+            mSelectedColor,
+            mSelectedDateInMillis
         )
 
         val taskList: ArrayList<Task> = mBoardDetails.taskList
