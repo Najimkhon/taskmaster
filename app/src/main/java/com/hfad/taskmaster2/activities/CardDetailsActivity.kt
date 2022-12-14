@@ -66,6 +66,13 @@ class CardDetailsActivity : BaseActivity() {
             showDataPicker()
         }
 
+        mSelectedDateInMillis = mBoardDetails.taskList[taskListPosition].cardList[cardListPosition].dueDate
+        if (mSelectedDateInMillis>0){
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+            val selectedDate = simpleDateFormat.format(Date(mSelectedDateInMillis))
+            binding.tvSelectDueDate.text = selectedDate
+        }
+
         setupSelectedMembersList()
 
 
