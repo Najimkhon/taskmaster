@@ -62,6 +62,10 @@ class CardDetailsActivity : BaseActivity() {
             membersListDialog()
         }
 
+        binding.tvSelectDueDate.setOnClickListener{
+            showDataPicker()
+        }
+
         setupSelectedMembersList()
 
 
