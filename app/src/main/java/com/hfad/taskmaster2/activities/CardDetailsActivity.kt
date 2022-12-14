@@ -1,6 +1,7 @@
 package com.hfad.taskmaster2.activities
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,9 @@ import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.*
 import com.hfad.taskmaster2.utils.Constants
 import com.projemanag.dialogs.MembersListDialog
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CardDetailsActivity : BaseActivity() {
     private lateinit var binding: ActivityCardDetailsBinding
@@ -27,6 +31,7 @@ class CardDetailsActivity : BaseActivity() {
     private var cardListPosition: Int = -1
     private var taskListPosition: Int = -1
     private var mSelectedColor: String = ""
+    private var mSelectedDateInMillis: Long = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -275,5 +280,37 @@ class CardDetailsActivity : BaseActivity() {
 
         }
         listDialog.show()
+    }
+
+    private fun showDataPicker() {
+
+        val c = Calendar.getInstance()
+        val year =
+            c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        val dpd = DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+
+                val sDayOfMonth = if (dayOfMonth < 10) "0$dayOfMonth" else "$dayOfMonth"
+
+                val sMonthOfYear =
+                    if ((monthOfYear + 1) < 10) "0${monthOfYear + 1}" else "${monthOfYear + 1}"
+
+                val selectedDate = "$sDayOfMonth/$sMonthOfYear/$year"
+
+                binding.tvSelectDueDate.text = selectedDate
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+
+                val theDate = sdf.parse(selectedDate)
+                mSelectedDateInMillis= theDate!!.time
+            },
+            year,
+            month,
+            day
+        )
+        dpd.show()
     }
 }
