@@ -8,16 +8,29 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hfad.taskmaster2.activities.TaskListActivity
 import com.hfad.taskmaster2.databinding.ItemTaskBinding
 import com.hfad.taskmaster2.models.Task
+import java.util.*
+import kotlin.collections.ArrayList
 
-open class TaskListItemsAdapter(private val context: Context, private var list: ArrayList<Task>):RecyclerView.Adapter<TaskListItemsAdapter.MyViewHolder>() {
+open class TaskListItemsAdapter(private val context: Context, private var list: ArrayList<Task>) :
+    RecyclerView.Adapter<TaskListItemsAdapter.MyViewHolder>() {
+
+    private var mPositionDraggedFrom = -1
+    private var mPositionDraggedTo = 1
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val viewBinding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val layoutParams = LinearLayout.LayoutParams((parent.width * 0.7).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT)
+        val viewBinding =
+            ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val layoutParams = LinearLayout.LayoutParams(
+            (parent.width * 0.7).toInt(),
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         layoutParams.setMargins((15.toDP()).toPx(), 0, (40.toDP()).toPx(), 0)
         viewBinding.root.layoutParams = layoutParams
         return MyViewHolder(viewBinding)
@@ -25,77 +38,80 @@ open class TaskListItemsAdapter(private val context: Context, private var list: 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val model = list[position]
-        if (holder is MyViewHolder){
-            if (position == list.size - 1){
+        if (holder is MyViewHolder) {
+            if (position == list.size - 1) {
                 holder.itemTaskBinding.tvAddTaskList.visibility = View.VISIBLE
                 holder.itemTaskBinding.llTaskItem.visibility = View.GONE
-            }else{
+            } else {
                 holder.itemTaskBinding.tvAddTaskList.visibility = View.GONE
                 holder.itemTaskBinding.llTaskItem.visibility = View.VISIBLE
             }
 
             holder.itemTaskBinding.tvTaskListTitle.text = model.title
-            holder.itemTaskBinding.tvAddTaskList.setOnClickListener{
+            holder.itemTaskBinding.tvAddTaskList.setOnClickListener {
                 holder.itemTaskBinding.tvAddTaskList.visibility = View.GONE
                 holder.itemTaskBinding.cvAddTaskListName.visibility = View.VISIBLE
             }
-            holder.itemTaskBinding.ibCloseListName.setOnClickListener{
+            holder.itemTaskBinding.ibCloseListName.setOnClickListener {
                 holder.itemTaskBinding.tvAddTaskList.visibility = View.VISIBLE
                 holder.itemTaskBinding.cvAddTaskListName.visibility = View.GONE
             }
-            holder.itemTaskBinding.ibDoneListName.setOnClickListener{
+            holder.itemTaskBinding.ibDoneListName.setOnClickListener {
                 val listName = holder.itemTaskBinding.etTaskListName.text.toString()
-                if (listName.isNotEmpty()){
-                    if (context is TaskListActivity){
+                if (listName.isNotEmpty()) {
+                    if (context is TaskListActivity) {
                         context.createTaskList(listName)
-                    }else{
-                        Toast.makeText(context, "Please, enter a list name!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Please, enter a list name!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
 
-            holder.itemTaskBinding.ibEditListName.setOnClickListener{
+            holder.itemTaskBinding.ibEditListName.setOnClickListener {
                 holder.itemTaskBinding.etEditTaskListName.setText(model.title)
                 holder.itemTaskBinding.llTitleView.visibility = View.GONE
                 holder.itemTaskBinding.cvEditTaskListName.visibility = View.VISIBLE
             }
 
-            holder.itemTaskBinding.ibCloseEditableView.setOnClickListener{
+            holder.itemTaskBinding.ibCloseEditableView.setOnClickListener {
                 holder.itemTaskBinding.llTitleView.visibility = View.VISIBLE
                 holder.itemTaskBinding.cvEditTaskListName.visibility = View.GONE
             }
 
-            holder.itemTaskBinding.ibDoneEditListName.setOnClickListener{
+            holder.itemTaskBinding.ibDoneEditListName.setOnClickListener {
                 val listName = holder.itemTaskBinding.etEditTaskListName.text.toString()
-                if (listName.isNotEmpty()){
-                    if (context is TaskListActivity){
+                if (listName.isNotEmpty()) {
+                    if (context is TaskListActivity) {
                         context.updateTaskList(position, listName, model)
-                    }else{
-                        Toast.makeText(context, "Please, enter a list name!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Please, enter a list name!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
 
-            holder.itemTaskBinding.ibDeleteList.setOnClickListener{
+            holder.itemTaskBinding.ibDeleteList.setOnClickListener {
                 alertDialogForDeleteList(position, model.title)
             }
 
-            holder.itemTaskBinding.tvAddCard.setOnClickListener{
+            holder.itemTaskBinding.tvAddCard.setOnClickListener {
                 holder.itemTaskBinding.cvAddCard.visibility = View.VISIBLE
                 holder.itemTaskBinding.tvAddCard.visibility = View.GONE
             }
 
-            holder.itemTaskBinding.ibCloseCardName.setOnClickListener{
+            holder.itemTaskBinding.ibCloseCardName.setOnClickListener {
                 holder.itemTaskBinding.cvAddCard.visibility = View.GONE
                 holder.itemTaskBinding.tvAddCard.visibility = View.VISIBLE
             }
-            holder.itemTaskBinding.ibDoneCardName.setOnClickListener{
+            holder.itemTaskBinding.ibDoneCardName.setOnClickListener {
                 val cardName = holder.itemTaskBinding.etCardName.text.toString()
-                if (cardName.isNotEmpty()){
-                    if (context is TaskListActivity){
+                if (cardName.isNotEmpty()) {
+                    if (context is TaskListActivity) {
                         context.createCard(position, cardName)
-                    }else{
-                        Toast.makeText(context, "Please, enter a card name!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Please, enter a card name!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
@@ -105,13 +121,66 @@ open class TaskListItemsAdapter(private val context: Context, private var list: 
             val adapter = CardListItemsAdapter(context, model.cardList)
             holder.itemTaskBinding.rvCardList.adapter = adapter
 
-            adapter.setOnClickListener(object: CardListItemsAdapter.OnClickListener{
-                override fun onClick(cardPosition: Int) {
-                    if (context is TaskListActivity){
-                        context.cardDetails(holder.adapterPosition, cardPosition)
+            adapter.setOnClickListener(
+                object : CardListItemsAdapter.OnClickListener {
+                    override fun onClick(cardPosition: Int) {
+                        if (context is TaskListActivity) {
+                            context.cardDetails(holder.adapterPosition, cardPosition)
+                        }
                     }
                 }
-            } )
+            )
+
+            val dividerItemDecoration = DividerItemDecoration(context,
+            DividerItemDecoration.VERTICAL)
+            holder.itemTaskBinding.rvCardList.addItemDecoration(dividerItemDecoration)
+
+            val helper = ItemTouchHelper(
+                object : ItemTouchHelper.SimpleCallback(
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
+                ){
+                    override fun onMove(
+                        recyclerView: RecyclerView,
+                        dragged: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder
+                    ): Boolean {
+                        val draggedPosition =dragged.adapterPosition
+                        val targetPosition = target.adapterPosition
+
+                        if (mPositionDraggedFrom == -1){
+                            mPositionDraggedFrom = draggedPosition
+                        }
+                        mPositionDraggedTo = targetPosition
+                        Collections.swap(list[holder.adapterPosition].cardList, draggedPosition, targetPosition)
+                        adapter.notifyItemMoved(draggedPosition, targetPosition)
+                        return false
+                    }
+
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    }
+
+                    override fun clearView(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder
+                    ) {
+                        super.clearView(recyclerView, viewHolder)
+                        if (mPositionDraggedFrom != -1 && mPositionDraggedTo != -1 && mPositionDraggedFrom != mPositionDraggedTo){
+                            (context as TaskListActivity).updateCardsInTaskList(
+                                holder.adapterPosition,
+                                list[holder.adapterPosition].cardList
+                            )
+                        }
+
+                        mPositionDraggedTo = -1
+                        mPositionDraggedFrom = -1
+                    }
+
+                }
+            )
+
+            helper.attachToRecyclerView(holder.itemTaskBinding.rvCardList)
+
+
         }
     }
 
@@ -120,11 +189,13 @@ open class TaskListItemsAdapter(private val context: Context, private var list: 
     }
 
     private fun Int.toDP(): Int =
-        (this/ Resources.getSystem().displayMetrics.density).toInt()
+        (this / Resources.getSystem().displayMetrics.density).toInt()
+
     private fun Int.toPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
-    inner class MyViewHolder(val itemTaskBinding: ItemTaskBinding): RecyclerView.ViewHolder(itemTaskBinding.root){
+    inner class MyViewHolder(val itemTaskBinding: ItemTaskBinding) :
+        RecyclerView.ViewHolder(itemTaskBinding.root) {
 
     }
 
