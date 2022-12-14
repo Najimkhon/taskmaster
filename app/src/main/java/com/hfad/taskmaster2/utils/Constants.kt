@@ -26,6 +26,9 @@ object Constants {
     const val CARD_LIST_ITEM_POSITION: String = "cardListPosition"
     const val SELECT: String = "Select"
     const val UN_SELECT: String = "UnSelect"
+    const val TASKMASTER_PREFERENCES = "TaskmasterPrefs"
+    const val FCM_TOKEN_UPDATED = "fcmTokenUpdated"
+    const val FCM_TOKEN = "fcmToken"
 
     fun showImageChooser(activity: Activity){
         var galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
