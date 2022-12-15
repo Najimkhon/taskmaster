@@ -1,27 +1,23 @@
 package com.hfad.taskmaster2.fcm
 
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.icu.text.CaseMap
-import android.media.Ringtone
+import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.storage.FirebaseStorage
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.activities.MainActivity
 import com.hfad.taskmaster2.activities.SignInActivity
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.utils.Constants
-import org.checkerframework.checker.interning.qual.InternMethod
 
 class MyFirebaseInstanceIDService:FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -50,7 +46,11 @@ class MyFirebaseInstanceIDService:FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String?){
-        //TO DO Implement
+        val sharedPreferences =
+            this.getSharedPreferences(Constants.TASKMASTER_PREFERENCES, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putString(Constants.FCM_TOKEN, token)
+        editor.apply()
     }
 
     private fun sendNotification(message: String, title: String){
