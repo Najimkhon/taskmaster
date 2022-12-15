@@ -77,12 +77,13 @@ class MyProfileActivity : BaseActivity() {
         {
             mSelectedImageUri = data.data
 
+
+
             try {
-                Glide
-                    .with(this)
+                Picasso.get()
                     .load(mSelectedImageUri)
-                    .centerCrop()
                     .placeholder(R.drawable.ic_user_place_holder)
+                    .error(R.drawable.ic_user_place_holder)
                     .into(binding.ivUserImage)
             }catch (e: IOException){
                 e.printStackTrace()
@@ -97,12 +98,13 @@ class MyProfileActivity : BaseActivity() {
 
         mUserDetails = user
 
+
+
         try {
-            Glide
-                .with(this)
+            Picasso.get()
                 .load(user.image)
-                .centerCrop()
                 .placeholder(R.drawable.ic_user_place_holder)
+                .error(R.drawable.ic_user_place_holder)
                 .into(binding.ivUserImage)
         }catch (e: IOException){
             e.printStackTrace()

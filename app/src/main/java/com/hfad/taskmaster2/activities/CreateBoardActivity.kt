@@ -5,21 +5,19 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivityCreateBoardBinding
-import com.hfad.taskmaster2.databinding.ActivityMyProfileBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.Board
 import com.hfad.taskmaster2.utils.Constants
+import com.squareup.picasso.Picasso
 import java.io.IOException
 
 class CreateBoardActivity : BaseActivity() {
@@ -134,12 +132,13 @@ class CreateBoardActivity : BaseActivity() {
         {
             mSelectedImageUri = data.data
 
+
+
             try {
-                Glide
-                    .with(this)
+                Picasso.get()
                     .load(mSelectedImageUri)
-                    .centerCrop()
                     .placeholder(R.drawable.ic_board_place_holder)
+                    .error(R.drawable.ic_board_place_holder)
                     .into(binding.ivBoardImage)
             }catch (e: IOException){
                 e.printStackTrace()

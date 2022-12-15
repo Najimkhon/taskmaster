@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.hfad.taskmaster2.R
-
 import com.hfad.taskmaster2.databinding.ItemMemberBinding
 import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
+import com.squareup.picasso.Picasso
 import java.io.IOException
 
 open class MemberListItemsAdapter(private val context: Context, private val list: ArrayList<User> ):
@@ -30,11 +29,10 @@ open class MemberListItemsAdapter(private val context: Context, private val list
 
         if (holder is MyViewHolder){
             try {
-                Glide
-                    .with(context)
+                Picasso.get()
                     .load(model.image)
-                    .centerCrop()
                     .placeholder(R.drawable.ic_user_place_holder)
+                    .error(R.drawable.ic_user_place_holder)
                     .into(holder.itemMemberBinding.ivMemberImage)
             }catch (e: IOException){
                 e.printStackTrace()

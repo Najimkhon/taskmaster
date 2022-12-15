@@ -1,14 +1,11 @@
 package com.hfad.taskmaster2.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.WindowManager
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ActivitySignUpBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass

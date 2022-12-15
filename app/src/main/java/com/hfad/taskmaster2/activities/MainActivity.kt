@@ -5,13 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.JsonToken
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.installations.FirebaseInstallations
@@ -21,9 +19,9 @@ import com.hfad.taskmaster2.databinding.ActivityMainBinding
 import com.hfad.taskmaster2.databinding.NavHeaderMainBinding
 import com.hfad.taskmaster2.firebase.FirestoreClass
 import com.hfad.taskmaster2.models.Board
-import com.hfad.taskmaster2.models.Task
 import com.hfad.taskmaster2.models.User
 import com.hfad.taskmaster2.utils.Constants
+import com.squareup.picasso.Picasso
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -87,13 +85,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val headerView = binding.navView.getHeaderView(0)
         val headerBinding = NavHeaderMainBinding.bind(headerView)
 
-
-        Glide
-            .with(this)
+        Picasso.get()
             .load(user.image)
-            .centerCrop()
             .placeholder(R.drawable.ic_user_place_holder)
+            .error(R.drawable.ic_user_place_holder)
             .into(headerBinding.ivUserImage)
+
         headerBinding.tvUsername.text = user.name
 
         if (readBoardList){

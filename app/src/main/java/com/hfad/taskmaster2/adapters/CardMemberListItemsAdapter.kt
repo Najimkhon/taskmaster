@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.hfad.taskmaster2.R
 import com.hfad.taskmaster2.databinding.ItemCardSelectedMemberBinding
 import com.hfad.taskmaster2.models.SelectedMembers
+import com.squareup.picasso.Picasso
 import java.io.IOException
 
 class CardMemberListItemsAdapter(
@@ -37,11 +37,10 @@ class CardMemberListItemsAdapter(
                 holder.itemCardSelectedMemberBinding.ivSelectedMemberImage.visibility = View.VISIBLE
 
                 try {
-                    Glide
-                        .with(context)
+                    Picasso.get()
                         .load(model.image)
-                        .centerCrop()
                         .placeholder(R.drawable.ic_user_place_holder)
+                        .error(R.drawable.ic_user_place_holder)
                         .into(holder.itemCardSelectedMemberBinding.ivSelectedMemberImage)
                 } catch (e: IOException) {
                     e.printStackTrace()
